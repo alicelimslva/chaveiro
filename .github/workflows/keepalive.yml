@@ -1,0 +1,23 @@
+# O plano gratuito do Supabase pausa projetos sem atividade por 7 dias.
+# Este job faz uma leitura simples a cada 3 dias para manter o projeto ativo.
+# Configure os secrets SUPABASE_URL e SUPABASE_ANON_KEY no repositório.
+name: Supabase keepalive
+
+on:
+  schedule:
+    - cron: '0 12 */3 * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ]; then echo "Secrets não configurados — nada a fazer."; exit 0; fi
+          curl -fsS "$SUPABASE_URL/rest/v1/store_settings?select=id" \
+            -H "apikey: $SUPABASE_ANON_KEY" -H "Authorization: Bearer $SUPABASE_ANON_KEY" > /dev/null
+          echo "ok"
