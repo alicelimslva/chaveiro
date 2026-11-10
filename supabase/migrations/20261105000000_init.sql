@@ -38,7 +38,8 @@ create or replace function public.handle_new_user() returns trigger
 language plpgsql security definer set search_path = public as $$
 declare v_first boolean;
 begin
-  select not exists (select 1 from profiles) into v_first;
+  -- Vira admin se ainda não houver nenhum administrador ativo.
+  select not exists (select 1 from profiles where role = 'admin' and active) into v_first;
   insert into profiles (id, name, email, role, active)
   values (
     new.id,
@@ -57,6 +58,8 @@ create trigger on_auth_user_created
 create or replace function public.protect_profile() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
+  -- Sem usuário logado = acesso direto ao banco (SQL Editor / service role): liberado.
+  if auth.uid() is null then return new; end if;
   if not is_admin() and (new.role is distinct from old.role or new.active is distinct from old.active) then
     raise exception 'Apenas o administrador pode alterar papel ou acesso';
   end if;
