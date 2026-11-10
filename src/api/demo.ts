@@ -206,10 +206,9 @@ export function createDemoApi(storage: KV): Api {
     },
     async updateProfile(id, patch) {
       const db = load();
-      const u = admin(db);
+      admin(db);
       const target = db.users.find((x) => x.id === id);
       if (!target) throw new Error('Usuário não encontrado.');
-      if (id === u.id && (patch.role === 'atendente' || patch.active === false)) throw new Error('Você não pode remover o próprio acesso de administrador.');
       Object.assign(target, patch);
       save(db);
     },
@@ -241,7 +240,6 @@ export function createDemoApi(storage: KV): Api {
     async saveCustomer(input) {
       const db = load();
       staff(db);
-      if (!input.name.trim()) throw new Error('Informe o nome do cliente.');
       if (input.id) {
         const c = db.customers.find((x) => x.id === input.id)!;
         Object.assign(c, input);
@@ -300,8 +298,6 @@ export function createDemoApi(storage: KV): Api {
     async createOrder(input) {
       const db = load();
       const u = staff(db);
-      if (!input.assignee_id) throw new Error('Toda ordem precisa de um responsável.');
-      if (!input.due_at) throw new Error('Informe o prazo prometido.');
       const now = new Date().toISOString();
       const { deposit, deposit_method, ...rest } = input;
       const o: Order = { ...rest, id: uid(), number: ++db.seq, code: generateCode(), status: 'recebido', created_by: u.id, created_at: now, updated_at: now, ready_at: null, delivered_at: null };
@@ -316,7 +312,6 @@ export function createDemoApi(storage: KV): Api {
       staff(db);
       const o = db.orders.find((x) => x.id === id);
       if (!o) throw new Error('Ordem não encontrada.');
-      if (patch.assignee_id === '') throw new Error('Toda ordem precisa de um responsável.');
       Object.assign(o, patch, { updated_at: new Date().toISOString() });
       save(db);
     },
@@ -366,7 +361,6 @@ export function createDemoApi(storage: KV): Api {
     async addPayment(orderId, amount, method, kind) {
       const db = load();
       const u = staff(db);
-      if (!(amount > 0)) throw new Error('Informe um valor maior que zero.');
       db.payments.push({ id: uid(), order_id: orderId, amount, method, kind, created_by: u.id, created_at: new Date().toISOString() });
       save(db);
     },

@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { createDemoApi, memoryKV } from './demo';
 import type { Api } from './types';
+import { withRules } from './withRules';
 
 let api: Api;
 
 beforeEach(() => {
-  api = createDemoApi(memoryKV());
+  // Mesma montagem do app: regras de negócio por cima do adaptador.
+  api = withRules(createDemoApi(memoryKV()));
 });
 
 describe('API demo', () => {
