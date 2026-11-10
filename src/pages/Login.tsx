@@ -112,7 +112,7 @@ export function Login() {
               <p className="mt-2 text-slate-600">Senha: demo123</p>
             </div>
           )}
-          {mode === 'cadastrar' && <p className="text-sm text-slate-500">O primeiro cadastro vira administrador. Os próximos precisam ser liberados pelo dono.</p>}
+          {mode === 'cadastrar' && <p className="text-sm text-slate-500">Todo cadastro novo entra como pendente. O administrador libera o acesso em “Usuários”.</p>}
         </form>
         <p className="mt-4 text-center text-sm text-slate-400">
           <Link to="/" className="underline">Ver a vitrine da loja</Link>

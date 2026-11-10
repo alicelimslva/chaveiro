@@ -26,8 +26,9 @@ Sem as variáveis do Supabase, o app roda em **modo demo**: os dados ficam no na
 1. Crie um projeto em supabase.com.
 2. No **SQL Editor**, rode o arquivo `supabase/migrations/20261105000000_init.sql`. Ele cria as tabelas, os triggers de histórico, a RLS em todas as tabelas, o bucket `vitrine` e os dados iniciais.
 3. Copie `.env.example` para `.env` e preencha `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` e `VITE_PUBLIC_URL` (o domínio final, usado nos links enviados ao cliente).
-4. Abra `/app/login`, clique em **Criar acesso** e cadastre o dono. **O primeiro cadastro vira administrador.** Os funcionários se cadastram do mesmo jeito, e o dono libera cada um em *Usuários*.
-5. (Opcional) Em Authentication → Providers → Email, desligue "Confirm email" para agilizar o cadastro.
+4. Abra `/app/login`, clique em **Criar acesso** e cadastre o dono. Na instalação inicial, esse primeiro cadastro vira administrador.
+5. **Logo em seguida**, rode no SQL Editor as demais migrations de `supabase/migrations/`, em ordem de nome. A `20261110000000_harden_signup_and_order_codes.sql` confere se existe um administrador ativo e desliga a promoção automática: a partir daí **todo cadastro novo entra como atendente inativo**, e o dono libera e promove em *Usuários* (ou pelo SQL Editor). Os funcionários se cadastram pela mesma tela.
+6. (Opcional) Em Authentication → Providers → Email, desligue "Confirm email" para agilizar o cadastro.
 
 ## Deploy
 
