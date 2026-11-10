@@ -54,9 +54,9 @@ export function Dashboard() {
     <div className="space-y-5">
       <PageTitle
         actions={
-          <div className="flex gap-1 rounded-xl bg-slate-200 p-1 text-sm font-semibold">
+          <div className="flex gap-1 rounded-xl bg-field p-1 text-sm font-semibold">
             {PERIODS.map((p) => (
-              <button key={p} onClick={() => setDays(p)} className={`rounded-lg px-4 py-2 ${days === p ? 'bg-white shadow' : 'text-slate-600'}`}>{p} dias</button>
+              <button key={p} onClick={() => setDays(p)} className={`rounded-lg px-4 py-2 ${days === p ? 'bg-card shadow' : 'text-text-soft'}`}>{p} dias</button>
             ))}
           </div>
         }
@@ -65,10 +65,10 @@ export function Dashboard() {
       </PageTitle>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Kpi label="Entregues no prazo" value={onTimePct === null ? '—' : `${onTimePct}%`} hint={`meta: acima de 90% · ${judged.length} concluídas`} tone={onTimePct === null ? '' : onTimePct >= 90 ? 'text-green-700' : 'text-red-700'} />
+        <Kpi label="Entregues no prazo" value={onTimePct === null ? '—' : `${onTimePct}%`} hint={`meta: acima de 90% · ${judged.length} concluídas`} tone={onTimePct === null ? '' : onTimePct >= 90 ? 'text-green-400' : 'text-red-400'} />
         <Kpi label="Faturamento recebido" value={brl(revenue)} hint={`${payments.length} pagamentos`} />
         <Kpi label="Ordens abertas no período" value={String(valid.length)} hint={`ticket médio ${brl(ticket)}`} />
-        <Kpi label="Atrasadas agora" value={String(lateNow)} hint={noAssignee ? `${noAssignee} sem responsável!` : 'todas com responsável'} tone={lateNow ? 'text-red-700' : 'text-green-700'} />
+        <Kpi label="Atrasadas agora" value={String(lateNow)} hint={noAssignee ? `${noAssignee} sem responsável!` : 'todas com responsável'} tone={lateNow ? 'text-red-400' : 'text-green-400'} />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -79,10 +79,10 @@ export function Dashboard() {
               <li key={x.line}>
                 <div className="mb-1 flex items-center justify-between text-sm">
                   <span className="flex items-center gap-2 font-semibold"><LineIcon line={x.line} size={16} /> {LINES[x.line].label}</span>
-                  <span className="font-bold">{brl(x.revenue)} <span className="font-normal text-slate-500">· {x.count} ordens</span></span>
+                  <span className="font-bold">{brl(x.revenue)} <span className="font-normal text-text-soft">· {x.count} ordens</span></span>
                 </div>
-                <div className="h-3 rounded-full bg-slate-100">
-                  <div className="h-3 rounded-full bg-slate-900" style={{ width: `${(x.revenue / maxLine) * 100}%` }} />
+                <div className="h-3 rounded-full bg-field">
+                  <div className="h-3 rounded-full bg-primary" style={{ width: `${(x.revenue / maxLine) * 100}%` }} />
                 </div>
               </li>
             ))}
@@ -92,17 +92,17 @@ export function Dashboard() {
         <section className="card">
           <h2 className="section-title">Prazo por responsável</h2>
           <table className="w-full text-left">
-            <thead className="text-sm text-slate-500">
+            <thead className="text-sm text-text-soft">
               <tr><th className="pb-2">Responsável</th><th className="pb-2 text-right">Ordens</th><th className="pb-2 text-right">No prazo</th></tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {[...people.values()].sort((a, b) => b.total - a.total).map((p) => {
                 const pct = p.judged ? Math.round((p.ok / p.judged) * 100) : null;
                 return (
                   <tr key={p.name}>
                     <td className="py-2 font-semibold">{p.name}</td>
                     <td className="py-2 text-right">{p.total}</td>
-                    <td className={`py-2 text-right font-bold ${pct === null ? '' : pct >= 90 ? 'text-green-700' : 'text-red-700'}`}>{pct === null ? '—' : `${pct}%`}</td>
+                    <td className={`py-2 text-right font-bold ${pct === null ? '' : pct >= 90 ? 'text-green-400' : 'text-red-400'}`}>{pct === null ? '—' : `${pct}%`}</td>
                   </tr>
                 );
               })}
@@ -111,7 +111,7 @@ export function Dashboard() {
           <h2 className="section-title mt-6">Recebido por forma de pagamento</h2>
           <div className="grid grid-cols-2 gap-2">
             {byMethod.map(({ m, v }) => (
-              <div key={m} className="flex justify-between rounded-lg bg-slate-50 px-3 py-2 text-sm">
+              <div key={m} className="flex justify-between rounded-lg bg-field px-3 py-2 text-sm">
                 <span>{PAYMENT_METHODS[m]}</span>
                 <b>{brl(v)}</b>
               </div>
@@ -126,9 +126,9 @@ export function Dashboard() {
 function Kpi({ label, value, hint, tone = '' }: { label: string; value: string; hint: string; tone?: string }) {
   return (
     <div className="card">
-      <p className="text-sm font-semibold text-slate-500">{label}</p>
+      <p className="text-sm font-semibold text-text-soft">{label}</p>
       <p className={`text-2xl font-extrabold sm:text-3xl ${tone}`}>{value}</p>
-      <p className="text-xs text-slate-500">{hint}</p>
+      <p className="text-xs text-text-soft">{hint}</p>
     </div>
   );
 }

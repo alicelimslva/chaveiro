@@ -64,10 +64,10 @@ export function CustomerDetail() {
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <h1 className="text-2xl font-extrabold">{c.name}</h1>
-              <p className="text-lg text-slate-700">{formatPhone(c.phone)}</p>
-              {c.email && <p className="text-slate-600">{c.email}</p>}
-              {c.notes && <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-amber-900">{c.notes}</p>}
-              <p className="mt-2 text-sm text-slate-500">Cliente desde {new Date(c.created_at).toLocaleDateString('pt-BR')}</p>
+              <p className="text-lg text-text-soft">{formatPhone(c.phone)}</p>
+              {c.email && <p className="text-text-soft">{c.email}</p>}
+              {c.notes && <p className="mt-2 rounded-lg bg-primary/10 px-3 py-2 text-amber-300">{c.notes}</p>}
+              <p className="mt-2 text-sm text-text-soft">Cliente desde {new Date(c.created_at).toLocaleDateString('pt-BR')}</p>
             </div>
             <div className="flex flex-wrap gap-2">
               {c.phone && <a className="btn-whatsapp" href={waLink(c.phone)} target="_blank" rel="noreferrer"><MessageCircle size={20} /> WhatsApp</a>}
@@ -80,14 +80,14 @@ export function CustomerDetail() {
 
       <div className="grid grid-cols-3 gap-3">
         <Kpi label="Atendimentos" value={String(valid.length)} />
-        <Kpi label="Total pago" value={brl(totalPaid)} tone="text-green-700" />
-        <Kpi label="Pendente" value={brl(pending)} tone={pending > 0 ? 'text-red-700' : undefined} />
+        <Kpi label="Total pago" value={brl(totalPaid)} tone="text-green-400" />
+        <Kpi label="Pendente" value={brl(pending)} tone={pending > 0 ? 'text-red-400' : undefined} />
       </div>
 
       {open.length > 0 && (
-        <div className="card border-amber-200 bg-amber-50">
-          <p className="font-bold text-amber-900">{open.length} ordem(ns) em aberto</p>
-          <ul className="mt-1 text-amber-900">
+        <div className="card border-primary/30 bg-primary/10">
+          <p className="font-bold text-amber-300">{open.length} ordem(ns) em aberto</p>
+          <ul className="mt-1 text-amber-300">
             {open.map((o) => <li key={o.id}><Link className="underline" to={`/app/ordens/${o.id}`}>#{o.number} — {o.description || LINES[o.line].label}</Link></li>)}
           </ul>
         </div>
@@ -100,7 +100,7 @@ export function CustomerDetail() {
         </div>
         {vehicleForm && (
           <form
-            className="mb-4 space-y-3 rounded-xl bg-slate-50 p-3"
+            className="mb-4 space-y-3 rounded-xl bg-field p-3"
             onSubmit={async (e) => {
               e.preventDefault();
               const r = await run(() => api.saveVehicle({ id: vehicleForm.id, customer_id: c.id, ...vehicleFromDraft(vehicleForm.draft) }), 'Veículo salvo');
@@ -117,20 +117,20 @@ export function CustomerDetail() {
             </div>
           </form>
         )}
-        {vehicles.length === 0 && !vehicleForm && <p className="text-slate-500">Nenhum veículo cadastrado.</p>}
+        {vehicles.length === 0 && !vehicleForm && <p className="text-text-soft">Nenhum veículo cadastrado.</p>}
         <div className="grid gap-2 sm:grid-cols-2">
           {vehicles.map((v) => (
-            <div key={v.id} className="flex items-start justify-between rounded-xl border border-slate-200 p-3">
+            <div key={v.id} className="flex items-start justify-between rounded-xl border border-border p-3">
               <div>
                 <p className="font-bold">{vehicleLabel(v)}</p>
-                <p className="text-sm text-slate-600">Chave: {v.key_type || '—'}</p>
-                <p className="text-sm text-slate-600">Transponder: {v.transponder || '—'}</p>
+                <p className="text-sm text-text-soft">Chave: {v.key_type || '—'}</p>
+                <p className="text-sm text-text-soft">Transponder: {v.transponder || '—'}</p>
               </div>
               <div className="flex gap-1">
-                <button className="rounded-lg p-2 hover:bg-slate-100" aria-label="Editar veículo" onClick={() => setVehicleForm({ id: v.id, draft: toDraft(v) })}><Pencil size={16} /></button>
+                <button className="rounded-lg p-2 hover:bg-card-hover" aria-label="Editar veículo" onClick={() => setVehicleForm({ id: v.id, draft: toDraft(v) })}><Pencil size={16} /></button>
                 {isAdmin(user) && (
                   <button
-                    className="rounded-lg p-2 text-red-600 hover:bg-red-50"
+                    className="rounded-lg p-2 text-red-400 hover:bg-state-late/10"
                     aria-label="Excluir veículo"
                     onClick={async () => {
                       if (confirm('Excluir este veículo?')) {
@@ -151,24 +151,24 @@ export function CustomerDetail() {
       <section className="card">
         <h2 className="section-title">Linha do tempo de atendimentos</h2>
         {orders.length === 0 ? (
-          <p className="text-slate-500">Nenhum atendimento ainda.</p>
+          <p className="text-text-soft">Nenhum atendimento ainda.</p>
         ) : (
-          <ol className="relative space-y-5 border-l-2 border-slate-200 pl-6">
+          <ol className="relative space-y-5 border-l-2 border-border pl-6">
             {orders.map((o) => (
               <li key={o.id} className="relative">
-                <span className="absolute -left-[37px] flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-brand-400">
+                <span className="absolute -left-[37px] flex h-6 w-6 items-center justify-center rounded-full bg-field text-primary">
                   <LineIcon line={o.line} size={13} />
                 </span>
-                <Link to={`/app/ordens/${o.id}`} className="block rounded-xl p-2 hover:bg-slate-50">
+                <Link to={`/app/ordens/${o.id}`} className="block rounded-xl p-2 hover:bg-card-hover">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-sm text-slate-500">{fmtDateTime(o.created_at)}</span>
+                    <span className="text-sm text-text-soft">{fmtDateTime(o.created_at)}</span>
                     <span className="font-mono text-sm font-bold">#{o.number}</span>
                     <StatusBadge status={o.status} />
                   </div>
                   <p className="font-semibold">{LINES[o.line].label}: {o.description || '—'}</p>
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm text-text-soft">
                     {brl(o.price)} · pago {brl(o.paid)}
-                    {balanceOf(o) > 0 && o.status !== 'cancelado' && <b className="text-red-700"> · falta {brl(balanceOf(o))}</b>}
+                    {balanceOf(o) > 0 && o.status !== 'cancelado' && <b className="text-red-400"> · falta {brl(balanceOf(o))}</b>}
                     {o.vehicle && ` · ${vehicleLabel(o.vehicle)}`}
                   </p>
                 </Link>
@@ -184,7 +184,7 @@ export function CustomerDetail() {
 function Kpi({ label, value, tone }: { label: string; value: string; tone?: string }) {
   return (
     <div className="card p-3 text-center sm:p-4">
-      <p className="text-xs font-bold uppercase text-slate-500">{label}</p>
+      <p className="text-xs font-bold uppercase text-text-soft">{label}</p>
       <p className={`text-lg font-extrabold sm:text-2xl ${tone ?? ''}`}>{value}</p>
     </div>
   );

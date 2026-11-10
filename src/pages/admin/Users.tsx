@@ -16,17 +16,17 @@ export function Users() {
   return (
     <div className="mx-auto max-w-3xl">
       <PageTitle>Usuários e permissões</PageTitle>
-      <div className="card mb-4 bg-slate-50 text-sm text-slate-700">
+      <div className="card mb-4 bg-field text-sm text-text-soft">
         <p><b>Como adicionar um funcionário:</b> peça para ele abrir o sistema e clicar em “Criar acesso”. O cadastro aparece aqui como pendente, e você libera.</p>
         <p className="mt-1"><b>Administrador</b>: acesso total (relatórios, preços, mensagens, vitrine, usuários). <b>Atendente</b>: ordens, clientes e pagamentos.</p>
       </div>
-      {pending.length > 0 && <p className="mb-3 rounded-xl bg-amber-50 p-3 font-semibold text-amber-900">{pending.length} cadastro(s) aguardando liberação.</p>}
-      <div className="divide-y divide-slate-100 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+      {pending.length > 0 && <p className="mb-3 rounded-xl bg-primary/10 p-3 font-semibold text-amber-300">{pending.length} cadastro(s) aguardando liberação.</p>}
+      <div className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
         {(data ?? []).map((p) => (
           <div key={p.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
             <div className="min-w-0 flex-1">
-              <p className="font-bold">{p.name} {p.id === user?.id && <span className="text-sm font-normal text-slate-500">(você)</span>}</p>
-              <p className="text-sm text-slate-500">{p.email}</p>
+              <p className="font-bold">{p.name} {p.id === user?.id && <span className="text-sm font-normal text-text-soft">(você)</span>}</p>
+              <p className="text-sm text-text-soft">{p.email}</p>
             </div>
             <select
               className="input w-40 py-2"

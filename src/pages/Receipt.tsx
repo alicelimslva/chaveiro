@@ -24,7 +24,7 @@ export function Receipt() {
   const link = trackingUrl(o.code);
 
   return (
-    <div className="min-h-screen bg-slate-200 py-6 print:bg-white print:py-0">
+    <div className="min-h-screen py-6 print:bg-white print:py-0">
       <style>{`@page { size: ${size === '80mm' ? '80mm auto' : 'A4'}; margin: ${size === '80mm' ? '4mm' : '15mm'}; }`}</style>
       <div className="no-print mx-auto mb-4 flex max-w-xl flex-wrap justify-center gap-2 px-4">
         <button className="btn-secondary" onClick={() => nav(-1)}>← Voltar</button>

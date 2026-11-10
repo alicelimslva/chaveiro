@@ -16,7 +16,7 @@ const STATUS_BTN: Partial<Record<OrderStatus, string>> = {
   aguardando_peca: 'btn bg-purple-600 text-white hover:bg-purple-700',
   pronto: 'btn bg-green-600 text-white hover:bg-green-700',
   entregue: 'btn-primary',
-  cancelado: 'btn-secondary text-red-700',
+  cancelado: 'btn-secondary text-red-400',
   recebido: 'btn-secondary',
 };
 
@@ -72,11 +72,11 @@ export function OrderDetail() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-4">
-      <button onClick={() => nav(-1)} className="no-print text-sm font-semibold text-slate-600 hover:underline">← Voltar</button>
+      <button onClick={() => nav(-1)} className="no-print text-sm font-semibold text-text-soft hover:underline">← Voltar</button>
 
       {isNew && (
-        <div className="card flex flex-wrap items-center justify-between gap-3 border-green-200 bg-green-50">
-          <p className="font-semibold text-green-900">Ordem #{o.number} aberta. Envie o link de acompanhamento ao cliente:</p>
+        <div className="card flex flex-wrap items-center justify-between gap-3 border-state-ready/30 bg-state-ready/10">
+          <p className="font-semibold text-green-400">Ordem #{o.number} aberta. Envie o link de acompanhamento ao cliente:</p>
           <div className="flex gap-2">
             <button className="btn-whatsapp" onClick={() => openNotify('recebido')}><MessageCircle size={20} /> Avisar cliente</button>
             <button className="btn-secondary" onClick={() => setParams({})}>Depois</button>
@@ -87,27 +87,27 @@ export function OrderDetail() {
       <div className={`card border-l-[6px] ${u === 'atrasada' ? 'border-l-red-600' : u === 'hoje' ? 'border-l-amber-400' : u === 'pronta' ? 'border-l-green-600' : 'border-l-slate-300'}`}>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="font-mono text-sm font-bold text-slate-500">Ordem #{o.number} · código {o.code}</p>
+            <p className="font-mono text-sm font-bold text-text-soft">Ordem #{o.number} · código {o.code}</p>
             <h1 className="text-2xl font-extrabold">
               <Link to={`/app/clientes/${o.customer.id}`} className="hover:underline">{o.customer.name}</Link>
             </h1>
-            <p className="text-slate-600">{formatPhone(o.customer.phone)}</p>
+            <p className="text-text-soft">{formatPhone(o.customer.phone)}</p>
             <div className="mt-2 flex flex-wrap gap-2">
               <StatusBadge status={o.status} />
               <LineTag line={o.line} />
             </div>
           </div>
           <div className="text-right">
-            <p className="text-sm font-semibold text-slate-500">Prazo prometido</p>
+            <p className="text-sm font-semibold text-text-soft">Prazo prometido</p>
             <p className="text-lg font-bold">{fmtDateTime(o.due_at)}</p>
             {u !== 'fechada' && u !== 'pronta' && (
-              <p className={`font-bold ${u === 'atrasada' ? 'text-red-700' : u === 'hoje' ? 'text-amber-700' : 'text-slate-600'}`}>{relativeDue(o.due_at)}</p>
+              <p className={`font-bold ${u === 'atrasada' ? 'text-red-400' : u === 'hoje' ? 'text-amber-300' : 'text-text-soft'}`}>{relativeDue(o.due_at)}</p>
             )}
           </div>
         </div>
 
         {nextStatuses(o.status).length > 0 && (
-          <div className="no-print mt-5 border-t border-slate-100 pt-4">
+          <div className="no-print mt-5 border-t border-border pt-4">
             <p className="label">Mover para</p>
             <div className="flex flex-wrap gap-2">
               {nextStatuses(o.status).map((s) => (
@@ -120,7 +120,7 @@ export function OrderDetail() {
           </div>
         )}
 
-        <div className="no-print mt-4 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
+        <div className="no-print mt-4 flex flex-wrap gap-2 border-t border-border pt-4">
           <button className="btn-whatsapp" onClick={() => openNotify(o.status)}><MessageCircle size={20} /> Avisar cliente</button>
           <button className="btn-secondary" onClick={() => void navigator.clipboard.writeText(link).then(() => toast('Link copiado!'))}><Copy size={18} /> Copiar link</button>
           <a className="btn-secondary" href={link} target="_blank" rel="noreferrer"><ExternalLink size={18} /> Ver como cliente</a>
@@ -164,9 +164,9 @@ export function OrderDetail() {
             </dl>
           )}
           {o.vehicle && (
-            <div className="mt-4 rounded-xl bg-slate-50 p-3">
+            <div className="mt-4 rounded-xl bg-field p-3">
               <p className="flex items-center gap-2 font-bold"><Car size={18} /> {vehicleLabel(o.vehicle)}</p>
-              <p className="text-sm text-slate-600">Chave: {o.vehicle.key_type || '—'} · Transponder: {o.vehicle.transponder || '—'}</p>
+              <p className="text-sm text-text-soft">Chave: {o.vehicle.key_type || '—'} · Transponder: {o.vehicle.transponder || '—'}</p>
             </div>
           )}
         </section>
@@ -175,11 +175,11 @@ export function OrderDetail() {
           <h2 className="section-title">Pagamento</h2>
           <div className="grid grid-cols-3 gap-2 text-center">
             <Money label="Total" value={o.price} />
-            <Money label="Pago" value={o.paid} tone="text-green-700" />
-            <Money label="Saldo" value={saldo} tone={saldo > 0 ? 'text-red-700' : 'text-slate-900'} />
+            <Money label="Pago" value={o.paid} tone="text-green-400" />
+            <Money label="Saldo" value={saldo} tone={saldo > 0 ? 'text-red-400' : 'text-text-strong'} />
           </div>
           {payments.length > 0 && (
-            <ul className="mt-3 divide-y divide-slate-100 text-sm">
+            <ul className="mt-3 divide-y divide-border text-sm">
               {payments.map((p) => (
                 <li key={p.id} className="flex justify-between py-2">
                   <span>{fmtDateTime(p.created_at)} · {PAYMENT_METHODS[p.method]} {p.kind === 'sinal' && <b>(sinal)</b>}</span>
@@ -214,15 +214,15 @@ export function OrderDetail() {
 
       <section className="card">
         <h2 className="section-title">Histórico</h2>
-        <ol className="relative space-y-4 border-l-2 border-slate-200 pl-6">
+        <ol className="relative space-y-4 border-l-2 border-border pl-6">
           {[...events].reverse().map((e) => (
             <li key={e.id} className="relative">
-              <span className={`absolute -left-[31px] top-1 h-4 w-4 rounded-full border-2 border-white ${STATUS_META[e.to_status].dot}`} />
+              <span className={`absolute -left-[31px] top-1 h-4 w-4 rounded-full border-2 border-card ${STATUS_META[e.to_status].dot}`} />
               <p className="font-semibold">
                 {e.from_status === null ? 'Ordem aberta' : e.from_status === e.to_status ? 'Anotação' : `${STATUS_META[e.from_status].label} → ${STATUS_META[e.to_status].label}`}
               </p>
-              <p className="text-sm text-slate-500">{fmtDateTime(e.created_at)} · {e.user_name ?? 'sistema'}</p>
-              {e.note && e.from_status !== null && <p className="mt-1 text-slate-700">{e.note}</p>}
+              <p className="text-sm text-text-soft">{fmtDateTime(e.created_at)} · {e.user_name ?? 'sistema'}</p>
+              {e.note && e.from_status !== null && <p className="mt-1 text-text-soft">{e.note}</p>}
             </li>
           ))}
         </ol>
@@ -230,7 +230,7 @@ export function OrderDetail() {
 
       {notify && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-0 sm:items-center sm:p-4" onClick={() => setNotify(null)}>
-          <div className="w-full max-w-lg rounded-t-2xl bg-white p-5 sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="w-full max-w-lg rounded-t-2xl bg-card p-5 sm:rounded-2xl" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-lg font-extrabold">Avisar {o.customer.name.split(' ')[0]} pelo WhatsApp</h3>
             <select
               className="input mt-3"
@@ -243,7 +243,7 @@ export function OrderDetail() {
               {templates.map((t) => <option key={t.key} value={t.key}>{t.title}</option>)}
             </select>
             <textarea className="input mt-3 min-h-[160px]" value={notify.text} onChange={(e) => setNotify({ ...notify, text: e.target.value })} />
-            {!o.customer.phone && <p className="mt-2 font-semibold text-red-700">Cliente sem telefone cadastrado.</p>}
+            {!o.customer.phone && <p className="mt-2 font-semibold text-red-400">Cliente sem telefone cadastrado.</p>}
             <div className="mt-4 flex gap-2">
               <button className="btn-secondary" onClick={() => setNotify(null)}>Fechar</button>
               <button
@@ -271,16 +271,16 @@ export function OrderDetail() {
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex gap-3">
-      <dt className="w-28 shrink-0 text-sm font-semibold text-slate-500">{label}</dt>
-      <dd className="text-slate-900">{children}</dd>
+      <dt className="w-28 shrink-0 text-sm font-semibold text-text-soft">{label}</dt>
+      <dd className="text-text-strong">{children}</dd>
     </div>
   );
 }
 
-function Money({ label, value, tone = 'text-slate-900' }: { label: string; value: number; tone?: string }) {
+function Money({ label, value, tone = 'text-text-strong' }: { label: string; value: number; tone?: string }) {
   return (
-    <div className="rounded-xl bg-slate-50 p-3">
-      <p className="text-xs font-bold uppercase text-slate-500">{label}</p>
+    <div className="rounded-xl bg-field p-3">
+      <p className="text-xs font-bold uppercase text-text-soft">{label}</p>
       <p className={`text-lg font-extrabold ${tone}`}>{brl(value)}</p>
     </div>
   );

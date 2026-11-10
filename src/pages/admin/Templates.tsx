@@ -38,7 +38,7 @@ export function Templates() {
             <button
               key={t.key}
               onClick={() => setSel(t)}
-              className={`whitespace-nowrap rounded-xl px-4 py-3 text-left font-semibold ${sel?.key === t.key ? 'bg-slate-900 text-white' : 'bg-white hover:bg-slate-200'}`}
+              className={`whitespace-nowrap rounded-xl px-4 py-3 text-left font-semibold ${sel?.key === t.key ? 'bg-primary text-ink shadow-glow' : 'bg-card hover:bg-card-hover'}`}
             >
               {t.title}
             </button>
@@ -55,13 +55,13 @@ export function Templates() {
               <textarea id="tpl-body" className="input min-h-[150px]" value={sel.body} onChange={(e) => setSel({ ...sel, body: e.target.value })} />
               <div className="mt-2 flex flex-wrap gap-1">
                 {TEMPLATE_VARS.map((v) => (
-                  <button key={v} type="button" onClick={() => insert(v)} className="chip bg-slate-100 font-mono text-slate-700 hover:bg-slate-200">{`{${v}}`}</button>
+                  <button key={v} type="button" onClick={() => insert(v)} className="chip bg-field font-mono text-text-soft hover:bg-card-hover">{`{${v}}`}</button>
                 ))}
               </div>
             </div>
             <div>
               <p className="label">Prévia</p>
-              <div className="whitespace-pre-wrap rounded-2xl rounded-tl-none bg-green-100 p-4 text-slate-900">{renderTemplate(sel.body, SAMPLE)}</div>
+              <div className="whitespace-pre-wrap rounded-2xl rounded-tl-none bg-state-ready/15 p-4 text-text-strong">{renderTemplate(sel.body, SAMPLE)}</div>
             </div>
             <button
               className="btn-primary w-full"

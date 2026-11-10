@@ -43,14 +43,14 @@ export function Customers() {
       {list.length === 0 ? (
         <Empty>Nenhum cliente.</Empty>
       ) : (
-        <div className="divide-y divide-slate-100 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <div className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
           {list.map((c) => (
-            <Link key={c.id} to={`/app/clientes/${c.id}`} className="flex items-center justify-between px-4 py-3 hover:bg-slate-50">
+            <Link key={c.id} to={`/app/clientes/${c.id}`} className="flex items-center justify-between px-4 py-3 hover:bg-card-hover">
               <span>
                 <span className="block font-bold">{c.name}</span>
-                <span className="text-sm text-slate-500">{formatPhone(c.phone)}</span>
+                <span className="text-sm text-text-soft">{formatPhone(c.phone)}</span>
               </span>
-              <ChevronRight className="text-slate-400" />
+              <ChevronRight className="text-text-faint" />
             </Link>
           ))}
         </div>

@@ -106,10 +106,10 @@ export function NewOrder() {
       <section className="card">
         <h2 className="section-title">1 · Cliente</h2>
         {customer ? (
-          <div className="flex items-center justify-between rounded-xl bg-slate-50 p-3">
+          <div className="flex items-center justify-between rounded-xl bg-field p-3">
             <div>
               <p className="text-lg font-bold">{customer.name}</p>
-              <p className="text-slate-600">{formatPhone(customer.phone)}</p>
+              <p className="text-text-soft">{formatPhone(customer.phone)}</p>
             </div>
             <button type="button" className="btn-secondary btn-sm" onClick={() => setCustomer(null)}>
               <X size={16} /> Trocar
@@ -127,7 +127,7 @@ export function NewOrder() {
                 <input id="cphone" className="input" inputMode="tel" placeholder="(11) 99999-0000" value={newCustomer.phone} onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })} />
               </div>
             </div>
-            <button type="button" className="text-sm font-semibold text-slate-600 underline" onClick={() => setNewCustomer(null)}>
+            <button type="button" className="text-sm font-semibold text-text-soft underline" onClick={() => setNewCustomer(null)}>
               Buscar cliente existente
             </button>
           </div>
@@ -150,7 +150,7 @@ export function NewOrder() {
               type="button"
               onClick={() => setLine(l)}
               aria-pressed={line === l}
-              className={`flex flex-col items-center gap-2 rounded-xl border-2 p-3 text-center font-semibold transition ${line === l ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-200 bg-white hover:border-slate-400'}`}
+              className={`flex flex-col items-center gap-2 rounded-xl border-2 p-3 text-center font-semibold transition ${line === l ? 'border-primary bg-card text-text-strong border border-border' : 'border-border bg-card hover:border-text-faint'}`}
             >
               <LineIcon line={l} size={26} />
               <span className="text-sm leading-tight">{LINES[l].label}</span>
@@ -159,7 +159,7 @@ export function NewOrder() {
         </div>
 
         {line === 'automotiva' && (
-          <div className="mt-4 space-y-3 rounded-xl bg-slate-50 p-3">
+          <div className="mt-4 space-y-3 rounded-xl bg-field p-3">
             <p className="flex items-center gap-2 font-bold"><Car size={18} /> Veículo</p>
             {vehicles.length > 0 && (
               <div className="grid gap-2 sm:grid-cols-2">
@@ -168,13 +168,13 @@ export function NewOrder() {
                     type="button"
                     key={v.id}
                     onClick={() => setVehicleId(v.id)}
-                    className={`rounded-xl border-2 p-3 text-left ${vehicleId === v.id ? 'border-slate-900 bg-white' : 'border-slate-200 bg-white'}`}
+                    className={`rounded-xl border-2 p-3 text-left ${vehicleId === v.id ? 'border-primary bg-card' : 'border-border bg-card'}`}
                   >
                     <p className="font-bold">{vehicleLabel(v)}</p>
-                    <p className="text-sm text-slate-600">{v.key_type || '—'} · Transponder: {v.transponder || '—'}</p>
+                    <p className="text-sm text-text-soft">{v.key_type || '—'} · Transponder: {v.transponder || '—'}</p>
                   </button>
                 ))}
-                <button type="button" onClick={() => setVehicleId('novo')} className={`rounded-xl border-2 border-dashed p-3 font-semibold ${vehicleId === 'novo' ? 'border-slate-900' : 'border-slate-300'}`}>
+                <button type="button" onClick={() => setVehicleId('novo')} className={`rounded-xl border-2 border-dashed p-3 font-semibold ${vehicleId === 'novo' ? 'border-primary' : 'border-border'}`}>
                   + Outro veículo
                 </button>
               </div>
@@ -214,7 +214,7 @@ export function NewOrder() {
             {chips.map((c) => {
               const v = toLocalInput(c.date.toISOString());
               return (
-                <button key={c.label} type="button" onClick={() => setDue(v)} className={`rounded-full border-2 px-4 py-2 text-sm font-semibold ${due === v ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-300 bg-white'}`}>
+                <button key={c.label} type="button" onClick={() => setDue(v)} className={`rounded-full border-2 px-4 py-2 text-sm font-semibold ${due === v ? 'border-primary bg-card text-text-strong border border-border' : 'border-border bg-card'}`}>
                   {c.label}
                 </button>
               );
@@ -232,7 +232,7 @@ export function NewOrder() {
         </div>
       </section>
 
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200 bg-white/95 p-3 backdrop-blur">
+      <div className="fixed inset-x-0 bottom-[64px] z-20 border-t border-border bg-card/95 p-3 backdrop-blur md:bottom-0 md:left-[80px] xl:left-[212px]">
         <div className="mx-auto flex max-w-3xl gap-2">
           <button type="button" className="btn-secondary" onClick={() => nav(-1)}>Cancelar</button>
           <button className="btn-primary flex-1 text-lg" disabled={!valid || busy}>

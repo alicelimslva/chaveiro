@@ -53,7 +53,7 @@ export function Orders() {
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold ${tab === t ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 hover:bg-slate-200'}`}
+            className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold ${tab === t ? 'bg-primary text-ink shadow-glow' : 'bg-card text-text-soft hover:bg-card-hover'}`}
           >
             {t === 'abertas' ? 'Abertas' : t === 'todas' ? 'Todas' : STATUS_META[t].label} <span className="opacity-60">{count(t)}</span>
           </button>

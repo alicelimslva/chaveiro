@@ -61,7 +61,7 @@ export function ShowcaseAdmin() {
               ) : (
                 <input className="input" value={store[f.key]} onChange={(e) => setStore({ ...store, [f.key]: e.target.value })} />
               )}
-              {f.hint && <p className="mt-1 text-xs text-slate-500">{f.hint}</p>}
+              {f.hint && <p className="mt-1 text-xs text-text-soft">{f.hint}</p>}
             </div>
           ))}
           <button className="btn-primary sm:col-span-2">Salvar dados da loja</button>
@@ -125,7 +125,7 @@ export function ShowcaseAdmin() {
           </button>
         </div>
         {data.photos.length === 0 ? (
-          <p className="text-slate-500">Nenhuma foto ainda. Fotos da fachada e de trabalhos feitos ajudam muito no Google.</p>
+          <p className="text-text-soft">Nenhuma foto ainda. Fotos da fachada e de trabalhos feitos ajudam muito no Google.</p>
         ) : (
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {data.photos.map((p) => (
@@ -133,7 +133,7 @@ export function ShowcaseAdmin() {
                 <img src={p.url} alt={p.caption} className="aspect-square w-full object-cover" />
                 <button
                   aria-label="Excluir foto"
-                  className="absolute right-2 top-2 rounded-lg bg-white/90 p-2 text-red-600 shadow"
+                  className="absolute right-2 top-2 rounded-lg bg-card/90 p-2 text-red-400 shadow"
                   onClick={async () => {
                     if (!confirm('Excluir esta foto?')) return;
                     await run(() => api.deletePhoto(p.id), 'Foto excluída');
@@ -156,7 +156,7 @@ function ServiceEditor({ s, onSave, onDelete }: { s: ShowcaseService; onSave: (s
   const [v, setV] = useState({ ...s, price: s.price_from == null ? '' : String(s.price_from).replace('.', ',') });
   return (
     <form
-      className={`grid gap-2 rounded-xl border-2 p-3 sm:grid-cols-6 ${v.active ? 'border-slate-200' : 'border-dashed border-slate-300 opacity-70'}`}
+      className={`grid gap-2 rounded-xl border-2 p-3 sm:grid-cols-6 ${v.active ? 'border-border' : 'border-dashed border-border opacity-70'}`}
       onSubmit={(e) => {
         e.preventDefault();
         const { price, ...rest } = v;
@@ -174,7 +174,7 @@ function ServiceEditor({ s, onSave, onDelete }: { s: ShowcaseService; onSave: (s
         <input type="checkbox" className="h-5 w-5" checked={v.active} onChange={(e) => setV({ ...v, active: e.target.checked })} /> Visível
       </label>
       <div className="flex gap-2 sm:col-span-6">
-        <button type="button" className="btn-secondary btn-sm text-red-700" onClick={onDelete}><Trash2 size={14} /> Excluir</button>
+        <button type="button" className="btn-secondary btn-sm text-red-400" onClick={onDelete}><Trash2 size={14} /> Excluir</button>
         <button className="btn-primary btn-sm flex-1">Salvar</button>
       </div>
     </form>
