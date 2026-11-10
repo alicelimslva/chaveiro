@@ -134,6 +134,9 @@ export function Pending() {
       <div className="card max-w-md text-center">
         <p className="text-xl font-extrabold">Aguardando liberação</p>
         <p className="mt-2 text-text-soft">Olá, {user.name}! Seu acesso foi criado, mas o administrador precisa liberar em “Usuários”.</p>
+        <p className="mt-3 rounded-lg bg-field p-2 text-sm text-text-soft">
+          Seu cadastro: <b>{user.email}</b>
+        </p>
         <div className="mt-5 flex justify-center gap-2">
           <button className="btn-secondary" onClick={() => void refresh()}>Verificar de novo</button>
           <button className="btn-primary" onClick={async () => { await signOut(); nav('/app/login'); }}>Sair</button>

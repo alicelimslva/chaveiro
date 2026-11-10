@@ -11,7 +11,9 @@ export function Users() {
   const { data, loading, reload } = useAsync(() => api.listProfiles());
   if (loading && !data) return <Loading />;
 
-  const pending = (data ?? []).filter((p) => !p.active);
+  // Pendentes primeiro, para o dono enxergar quem está esperando liberação.
+  const list = [...(data ?? [])].sort((a, b) => Number(a.active) - Number(b.active) || a.name.localeCompare(b.name));
+  const pending = list.filter((p) => !p.active);
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -22,10 +24,13 @@ export function Users() {
       </div>
       {pending.length > 0 && <p className="mb-3 rounded-xl bg-primary/10 p-3 font-semibold text-amber-300">{pending.length} cadastro(s) aguardando liberação.</p>}
       <div className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
-        {(data ?? []).map((p) => (
-          <div key={p.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
+        {list.map((p) => (
+          <div key={p.id} className={`flex flex-wrap items-center gap-3 px-4 py-3 ${p.active ? '' : 'bg-primary/10'}`}>
             <div className="min-w-0 flex-1">
-              <p className="font-bold">{p.name} {p.id === user?.id && <span className="text-sm font-normal text-text-soft">(você)</span>}</p>
+              <p className="font-bold">
+                {p.name} {p.id === user?.id && <span className="text-sm font-normal text-text-soft">(você)</span>}
+                {!p.active && <span className="ml-2 rounded-full bg-primary/20 px-2 py-0.5 text-xs font-semibold text-amber-300">pendente</span>}
+              </p>
               <p className="text-sm text-text-soft">{p.email}</p>
             </div>
             <select

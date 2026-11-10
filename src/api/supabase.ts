@@ -43,12 +43,20 @@ export function createSupabaseApi(url: string, anonKey: string): Api {
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
       if (error) throw new Error(error.message === 'Invalid login credentials' ? 'E-mail ou senha inválidos.' : error.message);
       const p = await profileOf(data.user.id);
-      if (!p) throw new Error('Perfil não encontrado.');
+      if (!p) {
+        await sb.auth.signOut();
+        throw new Error('Seu login existe, mas o perfil não foi criado. Peça ao administrador para rodar a migração de correção no Supabase.');
+      }
       return p;
     },
     async signUp(name, email, password) {
       const { data, error } = await sb.auth.signUp({ email, password, options: { data: { name } } });
-      if (error) throw new Error(error.message);
+      if (error) {
+        if (/already registered|already exists/i.test(error.message)) throw new Error('Já existe um cadastro com este e-mail. Use "Entrar".');
+        throw new Error(error.message);
+      }
+      // Com confirmação de e-mail ligada, o Supabase não acusa e-mail repetido: devolve um usuário sem identidades.
+      if (data.user && data.user.identities?.length === 0) throw new Error('Já existe um cadastro com este e-mail. Use "Entrar".');
       const p = data.user && data.session ? await profileOf(data.user.id) : null;
       return { needsApproval: !p?.active, needsEmailConfirm: !data.session };
     },
@@ -60,7 +68,9 @@ export function createSupabaseApi(url: string, anonKey: string): Api {
       return check(await sb.from('profiles').select('*').order('name')) as Profile[];
     },
     async updateProfile(id, patch) {
-      check(await sb.from('profiles').update(patch).eq('id', id));
+      // Sem .select() o RLS bloqueia em silêncio (0 linhas, sem erro) e a tela mostraria "liberado".
+      const rows = check(await sb.from('profiles').update(patch).eq('id', id).select('id')) as { id: string }[];
+      if (!rows.length) throw new Error('Não foi possível alterar este usuário. Confirme que você está logado como administrador ativo.');
     },
 
     async searchCustomers(q) {
