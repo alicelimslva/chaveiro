@@ -2,27 +2,111 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Tema "vitrine noturna de chaves" (DESIGN-escuro.md). O sistema é sempre escuro.
+   Formato HSL sem hsl(), como o shadcn v2 (Tailwind v3) espera. */
 @layer base {
+  :root,
+  .dark {
+    /* superfícies */
+    --background: 223 39% 7%;
+    --sidebar: 224 32% 9%;
+    --card: 222 29% 12%;
+    --card-hover: 223 28% 15%;
+    --field: 223 28% 13%;
+    --border: 221 23% 19%;
+    --input: 221 23% 19%;
+
+    /* texto */
+    --foreground: 220 20% 97%;
+    --card-foreground: 220 20% 97%;
+    --text-strong: 220 20% 97%;
+    --text-soft: 222 12% 67%;
+    --text-faint: 223 10% 48%;
+
+    /* ação */
+    --primary: 43 100% 50%;
+    --primary-hover: 44 100% 60%;
+    --primary-foreground: 223 39% 7%;
+    --ink: 223 39% 7%;
+    --ring: 43 100% 50%;
+
+    --secondary: 223 28% 13%;
+    --secondary-foreground: 220 20% 97%;
+    --accent: 223 28% 15%;
+    --accent-foreground: 220 20% 97%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 220 20% 97%;
+    --muted: 222 29% 12%;
+    --muted-foreground: 222 12% 67%;
+    --popover: 222 29% 12%;
+    --popover-foreground: 220 20% 97%;
+    --radius: 1rem;
+
+    --chart-1: 43 100% 50%;
+    --chart-2: 217 91% 60%;
+    --chart-3: 142 71% 45%;
+    --chart-4: 271 91% 65%;
+    --chart-5: 0 84% 60%;
+
+    --sidebar-foreground: 222 12% 67%;
+    --sidebar-primary: 43 100% 50%;
+    --sidebar-primary-foreground: 223 39% 7%;
+    --sidebar-accent: 222 29% 12%;
+    --sidebar-accent-foreground: 220 20% 97%;
+    --sidebar-border: 221 23% 19%;
+    --sidebar-ring: 43 100% 50%;
+
+    /* estados */
+    --state-late: 0 84% 60%;
+    --state-today: 217 91% 60%;
+    --state-tomorrow: 271 91% 65%;
+    --state-ready: 142 71% 45%;
+    --whatsapp: 142 70% 49%;
+
+    color-scheme: dark;
+  }
+
+  * { @apply border-border; }
   html { -webkit-tap-highlight-color: transparent; }
-  body { @apply bg-slate-100 text-slate-900 antialiased; }
+  body {
+    @apply text-foreground antialiased;
+    background:
+      radial-gradient(900px 500px at 70% 0%, hsl(43 100% 50% / 0.06), transparent 60%),
+      hsl(var(--background));
+    background-attachment: fixed;
+  }
+  ::selection { background: hsl(var(--primary) / 0.35); }
 }
 
 @layer components {
-  .btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-base font-semibold transition focus:outline-none focus-visible:ring-4 disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-control px-4 py-3 text-base font-semibold transition duration-150 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50; }
   .btn-sm { @apply px-3 py-2 text-sm rounded-lg; }
-  .btn-primary { @apply btn bg-slate-900 text-white hover:bg-slate-800 focus-visible:ring-slate-400; }
-  .btn-accent { @apply btn bg-brand-400 text-slate-900 hover:bg-brand-500 focus-visible:ring-brand-100; }
-  .btn-secondary { @apply btn border-2 border-slate-300 bg-white text-slate-900 hover:border-slate-400 hover:bg-slate-50 focus-visible:ring-slate-200; }
-  .btn-whatsapp { @apply btn bg-green-600 text-white hover:bg-green-700 focus-visible:ring-green-200; }
-  .btn-danger { @apply btn bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-200; }
-  .input { @apply w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-base text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none; }
-  .label { @apply mb-1 block text-sm font-semibold text-slate-700; }
-  .card { @apply rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5; }
+  .btn-primary { @apply btn bg-primary font-bold text-ink shadow-glow hover:bg-[hsl(var(--primary-hover))]; }
+  .btn-accent { @apply btn-primary; }
+  .btn-secondary { @apply btn border border-border bg-field text-text-strong hover:bg-card-hover; }
+  .btn-whatsapp { @apply btn bg-primary font-bold text-ink shadow-glow hover:bg-[hsl(var(--primary-hover))]; }
+  .btn-danger { @apply btn bg-red-600 text-white hover:bg-red-500; }
+  .input { @apply w-full rounded-control border border-border bg-field px-4 py-3 text-base text-text-strong placeholder:text-text-faint transition duration-150 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary/60; }
+  .label { @apply mb-1 block text-sm font-semibold text-text-soft; }
+  .card { @apply rounded-card border border-border bg-card p-4 text-card-foreground shadow-card sm:p-5; }
   .chip { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold; }
-  .section-title { @apply mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-slate-500; }
+  .section-title { @apply mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-text-soft; }
+  .eyebrow { @apply text-base font-semibold uppercase leading-5 tracking-[0.14em] text-primary; }
+}
+
+@layer utilities {
+  .glow-curve { filter: drop-shadow(0 0 18px rgba(255, 184, 0, 0.35)); }
+}
+
+select.input option { background: hsl(var(--card)); color: hsl(var(--foreground)); }
+input[type='date'].input,
+input[type='datetime-local'].input { color-scheme: dark; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
 
 @media print {
-  body { background: white !important; }
+  body { background: white !important; color: black; }
   .no-print { display: none !important; }
 }
