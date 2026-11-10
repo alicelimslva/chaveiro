@@ -15,12 +15,12 @@ export const ALL_STATUSES: OrderStatus[] = [...STATUS_FLOW, 'cancelado'];
 export const OPEN_STATUSES: OrderStatus[] = ['recebido', 'em_andamento', 'aguardando_peca', 'pronto'];
 
 export const STATUS_META: Record<OrderStatus, { label: string; badge: string; dot: string }> = {
-  recebido: { label: 'Recebido', badge: 'bg-slate-200 text-slate-800', dot: 'bg-slate-500' },
-  em_andamento: { label: 'Em andamento', badge: 'bg-blue-100 text-blue-800', dot: 'bg-blue-600' },
-  aguardando_peca: { label: 'Aguardando peça', badge: 'bg-purple-100 text-purple-800', dot: 'bg-purple-600' },
-  pronto: { label: 'Pronto', badge: 'bg-green-100 text-green-800', dot: 'bg-green-600' },
-  entregue: { label: 'Entregue', badge: 'bg-slate-800 text-white', dot: 'bg-slate-900' },
-  cancelado: { label: 'Cancelado', badge: 'bg-red-100 text-red-700', dot: 'bg-red-500' },
+  recebido: { label: 'Recebido', badge: 'bg-field text-text-strong', dot: 'bg-text-faint' },
+  em_andamento: { label: 'Em andamento', badge: 'bg-state-today/15 text-blue-300', dot: 'bg-blue-600' },
+  aguardando_peca: { label: 'Aguardando peça', badge: 'bg-state-tomorrow/15 text-purple-300', dot: 'bg-purple-600' },
+  pronto: { label: 'Pronto', badge: 'bg-state-ready/15 text-green-400', dot: 'bg-green-600' },
+  entregue: { label: 'Entregue', badge: 'bg-field text-text-soft border border-border', dot: 'bg-text-faint' },
+  cancelado: { label: 'Cancelado', badge: 'bg-state-late/15 text-red-400', dot: 'bg-red-500' },
 };
 
 export const PAYMENT_METHODS: Record<PaymentMethod, string> = {

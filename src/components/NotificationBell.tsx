@@ -61,32 +61,31 @@ export function NotificationBell() {
     <div className="relative" ref={box}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="relative flex h-12 w-12 items-center justify-center rounded-xl text-white hover:bg-slate-800"
+        className="relative flex h-11 w-11 items-center justify-center rounded-full text-text-soft transition hover:text-text-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         aria-label={`Avisos: ${items.length}`}
+        title={items.length ? `${items.length} aviso(s)` : 'Sem avisos'}
       >
-        {items.length ? <BellRing /> : <Bell />}
+        {items.length ? <BellRing size={26} /> : <Bell size={26} />}
         {items.length > 0 && (
-          <span className={`absolute right-1 top-1 min-w-[20px] rounded-full px-1 text-xs font-bold ${late ? 'bg-red-600 text-white' : 'bg-amber-400 text-slate-900'}`}>
-            {items.length}
-          </span>
+          <span aria-hidden className={`absolute right-2 top-2 h-2 w-2 rounded-full ring-2 ring-background ${late ? 'bg-state-late' : 'bg-primary'}`} />
         )}
       </button>
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-2xl">
-          <div className="border-b border-slate-100 px-4 py-3 font-bold">Avisos</div>
+        <div className="absolute right-0 top-full z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-card border border-border bg-card text-text-strong shadow-card">
+          <div className="border-b border-border px-4 py-3 font-bold">Avisos</div>
           <div className="max-h-96 overflow-y-auto">
-            {items.length === 0 && <p className="px-4 py-6 text-center text-slate-500">Nada atrasado nem vencendo hoje. 👍</p>}
+            {items.length === 0 && <p className="px-4 py-6 text-center text-text-soft">Nada atrasado nem vencendo hoje. 👍</p>}
             {items.map(({ o, kind }) => (
-              <Link key={o.id} to={`/app/ordens/${o.id}`} onClick={() => setOpen(false)} className="block border-b border-slate-50 px-4 py-3 hover:bg-slate-50">
-                <span className={`mr-2 inline-block h-2.5 w-2.5 rounded-full ${kind === 'atrasada' ? 'bg-red-600' : 'bg-amber-400'}`} />
+              <Link key={o.id} to={`/app/ordens/${o.id}`} onClick={() => setOpen(false)} className="block border-b border-border px-4 py-3 hover:bg-card-hover">
+                <span className={`mr-2 inline-block h-2.5 w-2.5 rounded-full ${kind === 'atrasada' ? 'bg-state-late' : 'bg-state-today'}`} />
                 <span className="font-semibold">#{o.number} {o.customer.name}</span>
-                <span className={`block pl-5 text-sm ${kind === 'atrasada' ? 'text-red-700' : 'text-amber-700'}`}>{relativeDue(o.due_at)}</span>
+                <span className={`block pl-5 text-sm ${kind === 'atrasada' ? 'text-red-400' : 'text-blue-400'}`}>{relativeDue(o.due_at)}</span>
               </Link>
             ))}
           </div>
           {perm === 'default' && (
             <button
-              className="w-full bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+              className="w-full bg-field px-4 py-3 text-sm font-semibold text-text-soft hover:bg-card-hover"
               onClick={async () => setPerm(await Notification.requestPermission())}
             >
               Ativar alertas no computador

@@ -56,7 +56,7 @@ export function CustomerSearch({ onPick, autoFocus = false, placeholder }: { onP
 
   return (
     <div className="relative w-full">
-      <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+      <Search className={`pointer-events-none absolute top-1/2 -translate-y-1/2 text-text-soft ${global ? "left-6" : "left-3"}`} size={global ? 24 : 20} />
       <input
         ref={ref}
         autoFocus={autoFocus}
@@ -77,26 +77,26 @@ export function CustomerSearch({ onPick, autoFocus = false, placeholder }: { onP
           if (e.key === 'Escape') setOpen(false);
         }}
         placeholder={placeholder ?? 'Buscar cliente: nome, telefone ou placa  ( / )'}
-        className="input pl-10"
+        className={global ? "input h-[52px] rounded-full pl-[3.75rem] pr-6" : "input pl-10"}
         aria-label="Buscar cliente"
       />
       {open && q.trim().length >= 2 && (
-        <div className="absolute left-0 right-0 top-full z-40 mt-1 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl">
-          {hits.length === 0 && <p className="px-4 py-3 text-slate-500">Nenhum cliente encontrado.</p>}
+        <div className="absolute left-0 right-0 top-full z-40 mt-1 overflow-hidden rounded-card border border-border bg-card shadow-card">
+          {hits.length === 0 && <p className="px-4 py-3 text-text-soft">Nenhum cliente encontrado.</p>}
           {hits.map((h, i) => (
             <button
               key={h.customer.id}
               type="button"
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => pick(h)}
-              className={`flex w-full items-center justify-between gap-3 px-4 py-3 text-left ${i === active ? 'bg-brand-50' : 'hover:bg-slate-50'}`}
+              className={`flex w-full items-center justify-between gap-3 px-4 py-3 text-left ${i === active ? 'bg-primary/10' : 'hover:bg-card-hover'}`}
             >
               <span>
-                <span className="block font-semibold text-slate-900">{h.customer.name}</span>
-                <span className="text-sm text-slate-500">{formatPhone(h.customer.phone)}</span>
+                <span className="block font-semibold text-text-strong">{h.customer.name}</span>
+                <span className="text-sm text-text-soft">{formatPhone(h.customer.phone)}</span>
               </span>
               {h.matchedPlate && (
-                <span className="chip bg-slate-900 text-white">
+                <span className="chip bg-primary text-ink">
                   <Car size={12} /> {h.matchedPlate}
                 </span>
               )}

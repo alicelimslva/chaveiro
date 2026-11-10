@@ -16,7 +16,7 @@ export function LineIcon({ line, ...p }: { line: ServiceLine } & LucideProps) {
 
 export function LineTag({ line }: { line: ServiceLine }) {
   return (
-    <span className="chip bg-slate-100 text-slate-700">
+    <span className="chip bg-field text-text-soft">
       <LineIcon line={line} size={14} />
       {LINES[line].short}
     </span>
@@ -29,16 +29,16 @@ export function StatusBadge({ status }: { status: OrderStatus }) {
 }
 
 export function Empty({ children }: { children: React.ReactNode }) {
-  return <p className="rounded-xl border-2 border-dashed border-slate-200 p-6 text-center text-slate-500">{children}</p>;
+  return <p className="rounded-xl border-2 border-dashed border-border p-6 text-center text-text-soft">{children}</p>;
 }
 
 export function Loading() {
-  return <p className="p-6 text-center text-slate-500">Carregando…</p>;
+  return <p className="p-6 text-center text-text-soft">Carregando…</p>;
 }
 
 export function ErrorBox({ error }: { error: Error | null }) {
   if (!error) return null;
-  return <p className="rounded-xl bg-red-50 p-4 font-semibold text-red-700">Erro: {error.message}</p>;
+  return <p className="rounded-xl bg-state-late/10 p-4 font-semibold text-red-400">Erro: {error.message}</p>;
 }
 
 export function PageTitle({ children, actions }: { children: React.ReactNode; actions?: React.ReactNode }) {
