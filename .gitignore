@@ -6,3 +6,7 @@ dev-dist
 test-results
 playwright-report
 *.log
+
+# Ferramentas locais do Claude Code (não fazem parte do app)
+.claude/
+skills-lock.json
