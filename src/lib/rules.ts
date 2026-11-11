@@ -40,6 +40,14 @@ export function assertPayment(amount: number) {
 }
 
 /** O administrador não pode tirar o próprio acesso (evita ficar sem nenhum admin). */
+export const MIN_PASSWORD = 6;
+
+export function assertNewPassword(current: string, next: string) {
+  if (!current) fail('Informe a senha atual.');
+  if ((next ?? '').length < MIN_PASSWORD) fail(`A senha nova precisa ter pelo menos ${MIN_PASSWORD} caracteres.`);
+  if (next === current) fail('A senha nova precisa ser diferente da atual.');
+}
+
 export function assertProfileChange(actorId: string | undefined, targetId: string, patch: Partial<Pick<Profile, 'role' | 'active'>>) {
   if (actorId === targetId && (patch.role === 'atendente' || patch.active === false)) {
     fail('Você não pode remover o próprio acesso de administrador.');

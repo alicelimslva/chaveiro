@@ -56,3 +56,43 @@ test('vitrine pública mostra serviços com WhatsApp', async ({ page }) => {
   const wa = page.getByRole('link', { name: 'WhatsApp', exact: true }).first();
   await expect(wa).toHaveAttribute('href', /^https:\/\/wa\.me\/55/);
 });
+
+test('alterar senha: confere a atual e a nova passa a valer no login', async ({ page }) => {
+  const login = async (pw: string) => {
+    await page.goto('/app/login');
+    await page.getByLabel('E-mail').fill('bruno@demo.com');
+    await page.getByLabel('Senha').fill(pw);
+    await page.getByRole('button', { name: 'Entrar', exact: true }).last().click();
+  };
+  await login('demo123');
+  await expect(page.getByRole('heading', { name: 'Painel do dia' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Conta' }).click();
+  await page.getByRole('menuitem', { name: 'Alterar senha' }).click();
+  await expect(page.getByRole('heading', { name: 'Alterar senha' })).toBeVisible();
+
+  // Senha atual errada
+  await page.getByLabel('Senha atual').fill('errada1');
+  await page.getByLabel('Senha nova', { exact: true }).fill('nova4567');
+  await page.getByLabel('Repita a senha nova').fill('nova4567');
+  await page.getByRole('button', { name: 'Salvar senha' }).click();
+  await expect(page.getByRole('alert')).toHaveText('Senha atual incorreta.');
+
+  // Confirmação diferente
+  await page.getByLabel('Senha atual').fill('demo123');
+  await page.getByLabel('Repita a senha nova').fill('outra999');
+  await page.getByRole('button', { name: 'Salvar senha' }).click();
+  await expect(page.getByRole('alert')).toContainText('confirmação');
+
+  // Certo
+  await page.getByLabel('Repita a senha nova').fill('nova4567');
+  await page.getByRole('button', { name: 'Salvar senha' }).click();
+  await expect(page.getByText('Senha alterada')).toBeVisible();
+
+  await page.getByRole('button', { name: 'Conta' }).click();
+  await page.getByRole('menuitem', { name: 'Sair' }).click();
+  await login('demo123');
+  await expect(page.getByText('E-mail ou senha inválidos.')).toBeVisible();
+  await login('nova4567');
+  await expect(page.getByRole('heading', { name: 'Painel do dia' })).toBeVisible();
+});

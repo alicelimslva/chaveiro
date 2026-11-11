@@ -38,6 +38,8 @@ export interface Api {
   signIn(email: string, password: string): Promise<Profile>;
   signUp(name: string, email: string, password: string): Promise<{ needsApproval: boolean; needsEmailConfirm: boolean }>;
   signOut(): Promise<void>;
+  /** Troca a senha de quem está logado; confere a senha atual antes. */
+  changePassword(current: string, next: string): Promise<void>;
 
   // Usuários / permissões
   listProfiles(): Promise<Profile[]>;

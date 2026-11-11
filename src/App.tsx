@@ -3,6 +3,7 @@ import { BrowserRouter, Link, Route, Routes, useNavigate } from 'react-router-do
 import { AuthProvider, RequireAuth } from './auth/AuthContext';
 import { AppLayout } from './components/AppLayout';
 import { ToastProvider } from './components/Toast';
+import { ChangePassword } from './pages/ChangePassword';
 import { CustomerDetail } from './pages/CustomerDetail';
 import { Customers } from './pages/Customers';
 import { Login, Pending } from './pages/Login';
@@ -65,6 +66,7 @@ export default function App() {
               <Route path="ordens/:id" element={<OrderDetail />} />
               <Route path="clientes" element={<Customers />} />
               <Route path="clientes/:id" element={<CustomerDetail />} />
+              <Route path="conta/senha" element={<ChangePassword />} />
               {/* Somente administrador */}
               <Route path="admin/relatorios" element={<RequireAuth admin><Dashboard /></RequireAuth>} />
               <Route path="admin/mensagens" element={<RequireAuth admin><Templates /></RequireAuth>} />

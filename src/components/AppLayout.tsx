@@ -1,4 +1,4 @@
-import { BarChart3, ClipboardList, Globe, LayoutGrid, Lock, LogOut, Menu, MessageSquareText, Plus, ShieldCheck, User, UserCog, Users, type LucideIcon } from 'lucide-react';
+import { BarChart3, ClipboardList, Globe, KeyRound, LayoutGrid, Lock, LogOut, Menu, MessageSquareText, Plus, ShieldCheck, User, UserCog, Users, type LucideIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { api, storage } from '../api';
@@ -208,6 +208,9 @@ function AccountMenu({ items }: { items: Item[] }) {
               ))}
             </div>
           )}
+          <Link to="/app/conta/senha" className={menuLink} onClick={() => setOpen(false)} role="menuitem">
+            <KeyRound size={20} /> Alterar senha
+          </Link>
           <button
             role="menuitem"
             className={`${menuLink} w-full text-left`}

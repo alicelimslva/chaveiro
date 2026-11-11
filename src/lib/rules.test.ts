@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { NewOrderInput } from '../types';
-import { assertCustomer, assertNewOrder, assertOrderPatch, assertPayment, assertProfileChange, DomainError } from './rules';
+import { assertCustomer, assertNewOrder, assertNewPassword, assertOrderPatch, assertPayment, assertProfileChange, DomainError } from './rules';
 
 const order = (over: Partial<NewOrderInput> = {}): NewOrderInput => ({
   customer_id: 'c1', vehicle_id: null, line: 'copia', description: '', price: 30,
@@ -8,6 +8,13 @@ const order = (over: Partial<NewOrderInput> = {}): NewOrderInput => ({
 });
 
 describe('regras de negócio', () => {
+  it('senha nova: exige a atual, mínimo de 6 e diferente da atual', () => {
+    expect(() => assertNewPassword('', 'nova123')).toThrow(/senha atual/);
+    expect(() => assertNewPassword('velha1', '12345')).toThrow(/pelo menos 6/);
+    expect(() => assertNewPassword('velha1', 'velha1')).toThrow(/diferente/);
+    expect(() => assertNewPassword('velha1', 'nova123')).not.toThrow();
+  });
+
   it('cliente precisa de nome', () => {
     expect(() => assertCustomer({ name: '  ' })).toThrow(DomainError);
     expect(() => assertCustomer({ name: 'Ana' })).not.toThrow();

@@ -198,6 +198,13 @@ export function createDemoApi(storage: KV): Api {
     async signOut() {
       storage.removeItem(SESSION_KEY);
     },
+    async changePassword(current, next) {
+      const db = load();
+      const u = db.users.find((x) => x.id === staff(db).id)!;
+      if (u.password !== current) throw new Error('Senha atual incorreta.');
+      u.password = next;
+      save(db);
+    },
 
     async listProfiles() {
       const db = load();

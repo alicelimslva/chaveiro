@@ -25,6 +25,17 @@ const toFull = (r: OrderRow): OrderFull => {
   };
 };
 
+/** Mensagens do Supabase Auth (em inglês) traduzidas para o balcão. */
+export function authMessage(message: string): string {
+  if (/rate limit|too many requests/i.test(message)) return 'Muitas tentativas em pouco tempo. Tente de novo em alguns minutos ou fale com o administrador.';
+  if (message === 'Invalid login credentials') return 'E-mail ou senha inválidos.';
+  if (/already registered|already exists/i.test(message)) return 'Já existe um cadastro com este e-mail. Use "Entrar".';
+  if (/different from the old password/i.test(message)) return 'A senha nova precisa ser diferente da atual.';
+  if (/password should (be at least|contain)|weak password/i.test(message)) return 'Senha fraca: use pelo menos 6 caracteres.';
+  if (/email not confirmed/i.test(message)) return 'Confirme seu e-mail antes de entrar.';
+  return message;
+}
+
 export function createSupabaseApi(url: string, anonKey: string): Api {
   const sb: SupabaseClient = createClient(url, anonKey, { auth: { persistSession: true } });
 
@@ -41,7 +52,7 @@ export function createSupabaseApi(url: string, anonKey: string): Api {
     },
     async signIn(email, password) {
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) throw new Error(error.message === 'Invalid login credentials' ? 'E-mail ou senha inválidos.' : error.message);
+      if (error) throw new Error(authMessage(error.message));
       const p = await profileOf(data.user.id);
       if (!p) {
         await sb.auth.signOut();
@@ -51,10 +62,7 @@ export function createSupabaseApi(url: string, anonKey: string): Api {
     },
     async signUp(name, email, password) {
       const { data, error } = await sb.auth.signUp({ email, password, options: { data: { name } } });
-      if (error) {
-        if (/already registered|already exists/i.test(error.message)) throw new Error('Já existe um cadastro com este e-mail. Use "Entrar".');
-        throw new Error(error.message);
-      }
+      if (error) throw new Error(authMessage(error.message));
       // Com confirmação de e-mail ligada, o Supabase não acusa e-mail repetido: devolve um usuário sem identidades.
       if (data.user && data.user.identities?.length === 0) throw new Error('Já existe um cadastro com este e-mail. Use "Entrar".');
       const p = data.user && data.session ? await profileOf(data.user.id) : null;
@@ -62,6 +70,18 @@ export function createSupabaseApi(url: string, anonKey: string): Api {
     },
     async signOut() {
       await sb.auth.signOut();
+    },
+    async changePassword(current, next) {
+      const { data } = await sb.auth.getSession();
+      const email = data.session?.user.email;
+      if (!email) throw new Error('Sua sessão expirou. Entre de novo para trocar a senha.');
+      // Confere a senha atual: no balcão o computador pode ficar logado e sozinho.
+      const check = await sb.auth.signInWithPassword({ email, password: current });
+      if (check.error) {
+        throw new Error(check.error.message === 'Invalid login credentials' ? 'Senha atual incorreta.' : authMessage(check.error.message));
+      }
+      const { error } = await sb.auth.updateUser({ password: next });
+      if (error) throw new Error(authMessage(error.message));
     },
 
     async listProfiles() {

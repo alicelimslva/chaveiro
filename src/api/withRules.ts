@@ -1,4 +1,4 @@
-import { assertCustomer, assertNewOrder, assertOrderPatch, assertPayment, assertProfileChange } from '../lib/rules';
+import { assertCustomer, assertNewOrder, assertNewPassword, assertOrderPatch, assertPayment, assertProfileChange } from '../lib/rules';
 import type { Api } from './types';
 
 /**
@@ -24,6 +24,10 @@ export function withRules(api: Api): Api {
     async addPayment(orderId, amount, method, kind) {
       assertPayment(amount);
       return api.addPayment(orderId, amount, method, kind);
+    },
+    async changePassword(current, next) {
+      assertNewPassword(current, next);
+      return api.changePassword(current, next);
     },
     async updateProfile(id, patch) {
       const me = await api.currentUser();
