@@ -3,6 +3,15 @@ export const onlyDigits = (s: string) => (s || '').replace(/\D/g, '');
 export const brl = (n: number) =>
   (Number.isFinite(n) ? n : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
+/**
+ * Texto do preço na vitrine. `null` = não mostrar valor (sob consulta ou sem preço),
+ * para nunca exibir "R$ 0,00".
+ */
+export function priceText(type: 'fixo' | 'a_partir_de' | 'sob_consulta' | undefined, value: number | null): { prefix: string; value: string } | null {
+  if (type === 'sob_consulta' || value == null || !(value > 0)) return null;
+  return { prefix: type === 'fixo' ? '' : 'A partir de', value: brl(value) };
+}
+
 export function formatPhone(phone: string): string {
   let d = onlyDigits(phone);
   if (d.length > 11 && d.startsWith('55')) d = d.slice(2);

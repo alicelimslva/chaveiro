@@ -1,4 +1,4 @@
-import { CalendarClock, CalendarDays, ChevronRight, CircleCheck, Clock, Handshake, KeyRound, ShieldCheck, ShoppingCart, Zap, type LucideIcon } from 'lucide-react';
+import { CalendarClock, CalendarDays, ChevronRight, CircleCheck, Clock, Handshake, KeyRound, MessageCircle, ShieldCheck, ShoppingCart, Zap, type LucideIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api';
@@ -8,7 +8,7 @@ import { OrderRow } from '../components/OrderRow';
 import { ErrorBox, Loading } from '../components/ui';
 import { imagemServico, SERVICOS, type Servico } from '../data/servicos';
 import { groupForPanel, OPEN_STATUSES } from '../lib/domain';
-import { brl } from '../lib/format';
+import { priceText } from '../lib/format';
 import { waLink } from '../lib/messaging';
 import { useAsync } from '../lib/useAsync';
 
@@ -88,7 +88,7 @@ export function Panel() {
         </SectionTitle>
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {SERVICOS.map((s) => (
-            <ServiceCard key={s.slug} s={s} />
+            <ServiceCard key={s.slug} s={s} whatsapp={store?.whatsapp} />
           ))}
         </div>
       </section>
@@ -179,9 +179,13 @@ function Metric({ href, label, value, bar, Icon, iconCls, filled }: { href: stri
   );
 }
 
-function ServiceCard({ s }: { s: Servico }) {
+const btnCls =
+  'inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-semibold text-ink shadow-glow transition duration-150 hover:bg-[hsl(var(--primary-hover))] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card';
+
+function ServiceCard({ s, whatsapp }: { s: Servico; whatsapp?: string }) {
   const img = imagemServico(s.imagem);
   const Icon = s.icone;
+  const price = priceText(s.tipoPreco, s.preco);
   return (
     <article className="group flex min-h-[150px] items-stretch gap-4 rounded-card border border-border bg-card p-2.5 pr-4 shadow-card transition duration-150 ease-out hover:-translate-y-0.5 hover:border-border/80 hover:bg-card-hover md:gap-5">
       <div className="w-[112px] shrink-0 overflow-hidden rounded-[0.875rem] bg-field md:w-[132px]">
@@ -198,16 +202,24 @@ function ServiceCard({ s }: { s: Servico }) {
         <p className="mt-1.5 line-clamp-2 text-[15px] leading-5 text-text-soft">{s.descricao}</p>
         <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-3">
           <p className="text-[15px] font-semibold leading-5 text-text-strong">
-            <span className="block text-xs font-normal text-text-soft">A partir de</span>
-            <span className="tabular-nums">{brl(s.aPartirDe)}</span>
+            {price ? (
+              <>
+                {price.prefix && <span className="block text-xs font-normal text-text-soft">{price.prefix}</span>}
+                <span className="tabular-nums">{price.value}</span>
+              </>
+            ) : (
+              'Sob consulta'
+            )}
           </p>
-          <Link
-            to="/app/ordens/nova"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-semibold text-ink shadow-glow transition duration-150 hover:bg-[hsl(var(--primary-hover))] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card"
-            aria-label={`Solicitar ${s.titulo}`}
-          >
-            <ShoppingCart size={16} /> Solicitar
-          </Link>
+          {price ? (
+            <Link to="/app/ordens/nova" className={btnCls} aria-label={`Solicitar ${s.titulo}`}>
+              <ShoppingCart size={16} /> Solicitar
+            </Link>
+          ) : whatsapp ? (
+            <a href={waLink(whatsapp, `Olá! Gostaria de uma avaliação para: ${s.titulo}.`)} target="_blank" rel="noreferrer" className={btnCls} aria-label={`Falar com atendimento sobre ${s.titulo}`}>
+              <MessageCircle size={16} /> Falar com atendimento
+            </a>
+          ) : null}
         </div>
       </div>
     </article>

@@ -6,7 +6,7 @@ import { Loading, PageTitle } from '../../components/ui';
 import { LINE_KEYS, LINES } from '../../lib/domain';
 import { parseMoney } from '../../lib/format';
 import { useAsync } from '../../lib/useAsync';
-import type { ShowcaseService, StoreSettings } from '../../types';
+import type { PriceType, ShowcaseService, StoreSettings } from '../../types';
 
 const STORE_FIELDS: { key: keyof StoreSettings; label: string; long?: boolean; hint?: string }[] = [
   { key: 'name', label: 'Nome da loja' },
@@ -160,7 +160,8 @@ function ServiceEditor({ s, onSave, onDelete }: { s: ShowcaseService; onSave: (s
       onSubmit={(e) => {
         e.preventDefault();
         const { price, ...rest } = v;
-        onSave({ ...rest, price_from: price.trim() ? parseMoney(price) : null });
+        const price_type = rest.price_type ?? 'a_partir_de';
+        onSave({ ...rest, price_type, price_from: price_type === 'sob_consulta' || !price.trim() ? null : parseMoney(price) });
       }}
     >
       <select className="input sm:col-span-2" value={v.line} onChange={(e) => setV({ ...v, line: e.target.value as ShowcaseService['line'] })} aria-label="Frente">
@@ -168,7 +169,20 @@ function ServiceEditor({ s, onSave, onDelete }: { s: ShowcaseService; onSave: (s
       </select>
       <input className="input sm:col-span-4" value={v.title} onChange={(e) => setV({ ...v, title: e.target.value })} aria-label="Título" />
       <input className="input sm:col-span-6" placeholder="Descrição" value={v.description} onChange={(e) => setV({ ...v, description: e.target.value })} aria-label="Descrição" />
-      <input className="input sm:col-span-2" placeholder="Preço a partir de" inputMode="decimal" value={v.price} onChange={(e) => setV({ ...v, price: e.target.value })} aria-label="Preço a partir de" />
+      <select className="input sm:col-span-2" value={v.price_type ?? 'a_partir_de'} onChange={(e) => setV({ ...v, price_type: e.target.value as PriceType })} aria-label="Tipo de preço">
+        <option value="a_partir_de">A partir de</option>
+        <option value="fixo">Preço fixo</option>
+        <option value="sob_consulta">Sob consulta (sem preço)</option>
+      </select>
+      <input
+        className="input sm:col-span-2"
+        placeholder={v.price_type === 'sob_consulta' ? 'Sem preço na vitrine' : 'Preço (R$)'}
+        inputMode="decimal"
+        disabled={v.price_type === 'sob_consulta'}
+        value={v.price_type === 'sob_consulta' ? '' : v.price}
+        onChange={(e) => setV({ ...v, price: e.target.value })}
+        aria-label="Preço"
+      />
       <input className="input sm:col-span-2" placeholder="WhatsApp deste serviço (opcional)" value={v.whatsapp} onChange={(e) => setV({ ...v, whatsapp: e.target.value })} aria-label="WhatsApp do serviço" />
       <label className="flex items-center gap-2 font-semibold sm:col-span-2">
         <input type="checkbox" className="h-5 w-5" checked={v.active} onChange={(e) => setV({ ...v, active: e.target.checked })} /> Visível

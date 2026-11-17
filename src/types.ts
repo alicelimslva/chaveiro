@@ -100,12 +100,17 @@ export interface StoreSettings {
   about: string;
 }
 
+/** Como o preço aparece na vitrine. `sob_consulta` não mostra valor e leva ao atendimento. */
+export type PriceType = 'fixo' | 'a_partir_de' | 'sob_consulta';
+
 export interface ShowcaseService {
   id: string;
   line: ServiceLine;
   title: string;
   description: string;
   price_from: number | null;
+  /** Pode faltar em dados antigos do modo demo: tratar como `a_partir_de`. */
+  price_type?: PriceType;
   whatsapp: string;
   sort: number;
   active: boolean;

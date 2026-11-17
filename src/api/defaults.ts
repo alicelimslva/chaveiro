@@ -53,9 +53,14 @@ export const DEFAULT_STORE: StoreSettings = {
 };
 
 export const DEFAULT_SERVICES: Omit<ShowcaseService, 'id'>[] = [
-  { line: 'copia', title: 'Cópia de chaves', description: 'Residenciais, tetra, gorges e cadeados. Na hora.', price_from: 12, whatsapp: '', sort: 1, active: true },
-  { line: 'controle', title: 'Controles de portão e alarme', description: 'Cópia e programação de controles de portão, garagem e alarme.', price_from: 45, whatsapp: '', sort: 2, active: true },
-  { line: 'automotiva', title: 'Chave automotiva', description: 'Chave canivete, codificada e com transponder para diversas marcas.', price_from: 150, whatsapp: '', sort: 3, active: true },
-  { line: 'abertura', title: 'Abertura de portas e carros', description: 'Atendimento rápido para portas residenciais e veículos.', price_from: 90, whatsapp: '', sort: 4, active: true },
-  { line: 'carimbo', title: 'Carimbos', description: 'Carimbos automáticos e personalizados para empresas e profissionais.', price_from: 40, whatsapp: '', sort: 5, active: true },
+  // Chaves e Controles
+  { line: 'copia', title: 'Cópia de Chave Simples', description: 'Cópia de chave comum (tipo Yale)', price_from: 15, price_type: 'fixo', whatsapp: '', sort: 1, active: true },
+  { line: 'controle', title: 'Controle para Portão', description: 'Controle remoto para portão eletrônico', price_from: 50, price_type: 'a_partir_de', whatsapp: '', sort: 2, active: true },
+  { line: 'copia', title: 'Cópia de Chave Tetra', description: 'Necessita avaliação do atendimento', price_from: null, price_type: 'sob_consulta', whatsapp: '', sort: 3, active: true },
+  { line: 'copia', title: 'Cópia de Chave Gorge', description: 'Necessita avaliação do atendimento', price_from: null, price_type: 'sob_consulta', whatsapp: '', sort: 4, active: true },
+  { line: 'copia', title: 'Cópia de Chave Codificada', description: 'Necessita avaliação do atendimento', price_from: null, price_type: 'sob_consulta', whatsapp: '', sort: 5, active: true },
+  { line: 'copia', title: 'Cópia de Chave Multiponto', description: 'Necessita avaliação do atendimento', price_from: null, price_type: 'sob_consulta', whatsapp: '', sort: 6, active: true },
+  { line: 'automotiva', title: 'Chave automotiva', description: 'Chave canivete, codificada e com transponder para diversas marcas.', price_from: 150, price_type: 'a_partir_de', whatsapp: '', sort: 7, active: true },
+  { line: 'abertura', title: 'Abertura de portas e carros', description: 'Atendimento rápido para portas residenciais e veículos.', price_from: 90, price_type: 'a_partir_de', whatsapp: '', sort: 8, active: true },
+  { line: 'carimbo', title: 'Carimbos', description: 'Carimbos automáticos e personalizados para empresas e profissionais.', price_from: 50, price_type: 'a_partir_de', whatsapp: '', sort: 9, active: true },
 ];

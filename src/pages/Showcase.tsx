@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import { BrandGradient } from '../components/brand-gradient';
 import { LineIcon, Loading } from '../components/ui';
-import { brl } from '../lib/format';
+import { priceText } from '../lib/format';
 import { waLink } from '../lib/messaging';
 import { useAsync } from '../lib/useAsync';
 import type { ShowcaseService, StoreSettings } from '../types';
@@ -98,6 +98,8 @@ export function Showcase() {
 
 function ServiceCard({ s, store }: { s: ShowcaseService; store: StoreSettings }) {
   const phone = s.whatsapp || store.whatsapp;
+  const price = priceText(s.price_type, s.price_from);
+  const consulta = s.price_type === 'sob_consulta';
   return (
     <article className="flex flex-col gap-3 rounded-2xl border-2 border-border p-4 sm:flex-row sm:items-center">
       <div className="flex flex-1 gap-3">
@@ -105,11 +107,17 @@ function ServiceCard({ s, store }: { s: ShowcaseService; store: StoreSettings })
         <div>
           <h3 className="text-lg font-bold">{s.title}</h3>
           <p className="text-text-soft">{s.description}</p>
-          {s.price_from != null && <p className="mt-1 font-semibold text-text-strong">A partir de {brl(s.price_from)}</p>}
+          {price && <p className="mt-1 font-semibold text-text-strong">{price.prefix ? `${price.prefix} ${price.value}` : price.value}</p>}
+          {consulta && <p className="mt-1 font-semibold text-text-strong">Sob consulta</p>}
         </div>
       </div>
-      <a className="btn-whatsapp shrink-0" href={waLink(phone, `Olá! Gostaria de saber sobre: ${s.title}.`)} target="_blank" rel="noreferrer">
-        <MessageCircle size={20} /> WhatsApp
+      <a
+        className="btn-whatsapp shrink-0"
+        href={waLink(phone, consulta ? `Olá! Gostaria de uma avaliação para: ${s.title}.` : `Olá! Gostaria de saber sobre: ${s.title}.`)}
+        target="_blank"
+        rel="noreferrer"
+      >
+        <MessageCircle size={20} /> {consulta ? 'Falar com atendimento' : 'WhatsApp'}
       </a>
     </article>
   );
